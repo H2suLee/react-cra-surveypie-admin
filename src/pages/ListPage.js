@@ -16,7 +16,7 @@ function ListPage() {
   const [page, setPage] = useState(1);
 
   if (error) {
-    return 'error';
+    return 'error2';
   }
 
   if (!data) {

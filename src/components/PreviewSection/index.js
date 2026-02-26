@@ -1,3 +1,5 @@
+import AddButton from '../AddButton';
+import Body from '../Body';
 import Card from '../Card';
 
 function PreviewSection({ questions }) {
@@ -5,9 +7,10 @@ function PreviewSection({ questions }) {
     <div>
       {questions.map((question, index) => (
         <Card key={index} title={question.title} desc={question.desc}>
-          body
+          <Body type={question.type} options={question.options} />
         </Card>
       ))}
+      <AddButton />
     </div>
   );
 }

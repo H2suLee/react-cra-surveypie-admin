@@ -13,7 +13,7 @@ function Card({ title, desc, children }) {
 
 const CardWrapper = styled.div`
   border: 1px solid #dddddd;
-  width: 300px;
+  width: 500px;
   margin: 30px auto;
   background: #ffffff;
   padding: 20px;

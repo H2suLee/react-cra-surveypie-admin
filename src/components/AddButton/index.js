@@ -1,10 +1,10 @@
 import { PlusCircleOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 
-function AddButton() {
+function AddButton({ onClick }) {
   return (
     <AddButtonWrapper>
-      <PlusCircleOutlined />
+      <PlusCircleOutlined onClick={onClick} />
     </AddButtonWrapper>
   );
 }

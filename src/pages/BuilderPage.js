@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Col, Row, Input } from 'antd';
+import { produce } from 'immer';
 
 import MainLayout from '../layouts/MainLayout';
 import PreviewSection from '../components/PreviewSection';
@@ -50,11 +51,66 @@ function BuilderPage() {
           <Input
             placeholder="설문 제목을 입력해 주세요."
             value={data.title}
+            /*
             onChange={(e) => {
               setData((state) => ({ ...state, title: e.target.value }));
             }}
+            */
+            // immer.js 사용1
+            /*
+            onChange={(e) => {
+              const newData = produce(data, (draft) => {
+                draft.title = e.target.value;
+              })
+            setData(newData);
+            }}
+            */
+            // immer.js 를 더 간단히. react와 조합하면 data를 굳이 선언할 필요 x
+            onChange={(e) => {
+              setData(
+                produce(data, (draft) => {
+                  draft.title = e.target.value;
+                }),
+              );
+            }}
           />
-          <PreviewSection questions={data.questions} />
+          <PreviewSection
+            questions={data.questions}
+            addQuestion={() => {
+              /*
+              setData((state) => ({
+                ...state,
+                questions: [
+                  ...state.questions,
+                  {
+                    title: 'Untitled',
+                    desc: '',
+                    type: 'text',
+                    required: false,
+                    options: {
+                      max: 20,
+                      placeholder: '',
+                    },
+                  },
+                ],
+              }));
+              */
+              setData(
+                produce((draft) => {
+                  draft.questions.push({
+                    title: 'Untitled',
+                    desc: '',
+                    type: 'text',
+                    required: false,
+                    options: {
+                      max: 20,
+                      placeholder: '',
+                    },
+                  });
+                }),
+              );
+            }}
+          />
         </Col>
         <Col flex="350px">
           <OptionSection />{' '}

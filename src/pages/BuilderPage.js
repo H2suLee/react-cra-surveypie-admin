@@ -6,51 +6,26 @@ import MainLayout from '../layouts/MainLayout';
 import PreviewSection from '../components/PreviewSection';
 import OptionSection from '../components/OptionSection';
 
+import {
+  setTitle,
+  addQuestion,
+  moveUpQuestion,
+  moveDownQuestion,
+  deleteQuestion,
+} from '../stores/survey/surveySlice';
+import { useDispatch, useSelector } from 'react-redux';
+
 function BuilderPage() {
-  const [data, setData] = useState({
-    id: 1,
-    title: '명절 선물 선호도 조사',
-    questions: [
-      {
-        title: '설날에 받고 싶은 선물은 무엇인가요? (최대 3개)',
-        desc: '특별히 받고 싶은 선물이 없다면 선택하지 말고 넘어가세요.',
-        type: 'select',
-        required: false,
-        options: {
-          max: 3,
-          items: ['식품', '전자기기', '도서', '의류', '돈'],
-        },
-      },
-      {
-        title: '추석에 받고 싶은 선물은 무엇인가요?',
-        desc: '특별히 받고 싶은 선물이 없다면 입력하지 말고 넘어가세요.',
-        type: 'text',
-        required: false,
-        options: {
-          max: 10,
-          placeholder: '10자 이내로 입력해주세요.',
-        },
-      },
-      {
-        title: '입력한 선물을 받고 싶은 이유가 무엇인가요? (필수)',
-        desc: '',
-        type: 'textarea',
-        required: true,
-        options: {
-          max: 100,
-          placeholder: '100자 이내로 입력해주세요.',
-        },
-      },
-    ],
-    createdAt: 1647160914620,
-  });
+  const [data, setData] = useState({}); // 로컬 state
+  const survey = useSelector((state) => state.survey); // 전역 state, data = survey
+  const dispatch = useDispatch();
   return (
     <MainLayout selectedKeys={['builder']}>
       <Row>
         <Col flex="auto">
           <Input
             placeholder="설문 제목을 입력해 주세요."
-            value={data.title}
+            value={survey.title}
             /*
             onChange={(e) => {
               setData((state) => ({ ...state, title: e.target.value }));
@@ -66,6 +41,7 @@ function BuilderPage() {
             }}
             */
             // immer.js 를 더 간단히. react와 조합하면 data를 굳이 선언할 필요 x
+            /*
             onChange={(e) => {
               setData(
                 produce(data, (draft) => {
@@ -73,9 +49,14 @@ function BuilderPage() {
                 }),
               );
             }}
+            */
+            // 위는 로컬 state를 변경하는 코드, 아래는 전역 state를 변경하는 코드
+            onChange={(e) => {
+              dispatch(setTitle(e.target.value));
+            }}
           />
           <PreviewSection
-            questions={data.questions}
+            questions={survey.questions}
             addQuestion={() => {
               /*
               setData((state) => ({
@@ -95,7 +76,8 @@ function BuilderPage() {
                 ],
               }));
               */
-              setData(
+              /*
+             setData(
                 produce((draft) => {
                   draft.questions.push({
                     title: 'Untitled',
@@ -109,11 +91,15 @@ function BuilderPage() {
                   });
                 }),
               );
+              */
+              // 위는 로컬 state를 변경하는 코드, 아래는 전역 state를 변경하는 코드
+              dispatch(addQuestion());
             }}
             moveUpQuestion={(index) => {
               if (index === 0) {
                 return;
               }
+              /*
               setData(
                 produce((draft) => {
                   const temp = draft.questions[index];
@@ -122,26 +108,17 @@ function BuilderPage() {
                   draft.questions[index - 1] = temp;
                 }),
               );
+              */
+              dispatch(moveUpQuestion(index));
             }}
             deleteQuestion={(index) => {
-              setData(
-                produce((draft) => {
-                  draft.questions.splice(index, 1);
-                }),
-              );
+              dispatch(deleteQuestion(index));
             }}
             moveDownQuestion={(index) => {
-              if (index === data.questions.length - 1) {
+              if (index === survey.questions.length - 1) {
                 return;
               }
-              setData(
-                produce((draft) => {
-                  const temp = draft.questions[index];
-                  // 순서 바꾸기
-                  draft.questions[index] = draft.questions[index + 1];
-                  draft.questions[index + 1] = temp;
-                }),
-              );
+              dispatch(moveDownQuestion(index));
             }}
           />
         </Col>

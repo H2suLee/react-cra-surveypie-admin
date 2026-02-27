@@ -57,7 +57,7 @@ function BuilderPage() {
           />
           <PreviewSection
             questions={survey.questions}
-            addQuestion={() => {
+            addQuestion={(type) => {
               /*
               setData((state) => ({
                 ...state,
@@ -93,7 +93,7 @@ function BuilderPage() {
               );
               */
               // 위는 로컬 state를 변경하는 코드, 아래는 전역 state를 변경하는 코드
-              dispatch(addQuestion());
+              dispatch(addQuestion(type));
             }}
             moveUpQuestion={(index) => {
               if (index === 0) {

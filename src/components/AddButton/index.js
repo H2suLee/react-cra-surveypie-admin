@@ -6,7 +6,6 @@ import styled from 'styled-components';
 function AddButton({ addQuestion }) {
   const [visible, setVisible] = useState(false);
   const hide = () => {
-    console.log('why?');
     setVisible(false);
   };
 

@@ -38,7 +38,6 @@ const columns = [
 
 function ListPage() {
   const { data, error } = useSWR('/surveys', fetcher);
-  console.log('data', data);
 
   const navigate = useNavigate();
 

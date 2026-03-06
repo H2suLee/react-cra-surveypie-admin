@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+/*
 const initialState = {
   id: 1,
   title: '명절 선물 선호도 조사',
@@ -37,12 +38,17 @@ const initialState = {
   ],
   createdAt: 1647160914620,
 };
+ */
+const initialState = {
+  data: null,
+};
+
 export const surveySlice = createSlice({
   name: 'survey',
   initialState,
   reducers: {
     setTitle: (state, action) => {
-      state.title = action.payload; // immer library가 내장돼있어서 불변성 걱정 ㄴㄴ
+      state.data.title = action.payload; // immer library가 내장돼있어서 불변성 걱정 ㄴㄴ
     },
     addQuestion: (state, action) => {
       const type = action.payload;
@@ -59,7 +65,7 @@ export const surveySlice = createSlice({
           items: ['가', '나', '다'],
         };
       }
-      state.questions.push({
+      state.data.questions.push({
         title: 'Untitled',
         desc: '',
         type: type,
@@ -69,21 +75,24 @@ export const surveySlice = createSlice({
     },
     moveUpQuestion: (state, action) => {
       const index = action.payload;
-      const temp = state.questions[index];
+      const temp = state.data.questions[index];
       // 순서 바꾸기
-      state.questions[index] = state.questions[index - 1];
-      state.questions[index - 1] = temp;
+      state.data.questions[index] = state.data.questions[index - 1];
+      state.data.questions[index - 1] = temp;
     },
     moveDownQuestion: (state, action) => {
       const index = action.payload;
-      const temp = state.questions[index];
+      const temp = state.data.questions[index];
       // 순서 바꾸기
-      state.questions[index] = state.questions[index + 1];
-      state.questions[index + 1] = temp;
+      state.data.questions[index] = state.data.questions[index + 1];
+      state.data.questions[index + 1] = temp;
     },
     deleteQuestion: (state, action) => {
       const index = action.payload;
-      state.questions.splice(index, 1);
+      state.data.questions.splice(index, 1);
+    },
+    setSurvey: (state, action) => {
+      state.data = action.payload;
     },
   },
 });
@@ -95,6 +104,7 @@ export const {
   moveUpQuestion,
   moveDownQuestion,
   deleteQuestion,
+  setSurvey,
 } = surveySlice.actions;
 
 export default surveySlice.reducer;

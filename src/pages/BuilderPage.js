@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { Col, Row, Input } from 'antd';
 import { produce } from 'immer';
 
 import MainLayout from '../layouts/MainLayout';
 import PreviewSection from '../components/PreviewSection';
 import OptionSection from '../components/OptionSection';
+import fetcher from '../lib/fetcher';
 
 import {
   setTitle,
@@ -12,13 +14,28 @@ import {
   moveUpQuestion,
   moveDownQuestion,
   deleteQuestion,
+  setSurvey,
 } from '../stores/survey/surveySlice';
 import { useDispatch, useSelector } from 'react-redux';
 
 function BuilderPage() {
   const [data, setData] = useState({}); // 로컬 state
-  const survey = useSelector((state) => state.survey); // 전역 state, data = survey
+  const survey = useSelector((state) => state.survey.data); // 전역 state, data = survey
   const dispatch = useDispatch();
+  const params = useParams();
+
+  // 렌더링 될때마다 dispatch 가 실행되는 걸 방지하기 위해 useEffect로 감싸기
+  useEffect(() => {
+    dispatch((dispatch, getState) => {
+      fetcher(`/surveys/${params.surveyId}`).then((data) => {
+        dispatch(setSurvey(data));
+      });
+    });
+  }, [dispatch, params.surveyId]);
+  if (!survey) {
+    return null;
+  }
+
   return (
     <MainLayout selectedKeys={['builder']}>
       <Row>

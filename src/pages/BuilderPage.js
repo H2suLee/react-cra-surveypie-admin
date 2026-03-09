@@ -8,6 +8,8 @@ import PreviewSection from '../components/PreviewSection';
 import OptionSection from '../components/OptionSection';
 import fetcher from '../lib/fetcher';
 
+import getSurvey from '../services/getSurvey';
+
 import {
   setTitle,
   addQuestion,
@@ -21,19 +23,22 @@ import { useDispatch, useSelector } from 'react-redux';
 function BuilderPage() {
   const [data, setData] = useState({}); // 로컬 state
   const survey = useSelector((state) => state.survey.data); // 전역 state, data = survey
+  const error = useSelector((state) => state.survey.error);
+  const loading = useSelector((state) => state.survey.loading);
   const dispatch = useDispatch();
   const params = useParams();
 
   // 렌더링 될때마다 dispatch 가 실행되는 걸 방지하기 위해 useEffect로 감싸기
   useEffect(() => {
-    dispatch((dispatch, getState) => {
-      fetcher(`/surveys/${params.surveyId}`).then((data) => {
-        dispatch(setSurvey(data));
-      });
-    });
+    dispatch(getSurvey(params.surveyId));
   }, [dispatch, params.surveyId]);
-  if (!survey) {
-    return null;
+
+  if (error) {
+    return 'error';
+  }
+
+  if (!survey || loading) {
+    return 'loading';
   }
 
   return (

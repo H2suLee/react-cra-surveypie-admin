@@ -41,6 +41,8 @@ const initialState = {
  */
 const initialState = {
   data: null,
+  loading: null,
+  error: false,
 };
 
 export const surveySlice = createSlice({
@@ -94,6 +96,12 @@ export const surveySlice = createSlice({
     setSurvey: (state, action) => {
       state.data = action.payload;
     },
+    setError: (state, action) => {
+      state.error = action.payload;
+    },
+    setLoading: (state, action) => {
+      state.loading = action.payload;
+    },
   },
 });
 
@@ -105,6 +113,8 @@ export const {
   moveDownQuestion,
   deleteQuestion,
   setSurvey,
+  setError,
+  setLoading,
 } = surveySlice.actions;
 
 export default surveySlice.reducer;

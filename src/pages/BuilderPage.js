@@ -10,19 +10,12 @@ import fetcher from '../lib/fetcher';
 
 import getSurvey from '../services/getSurvey';
 
-import {
-  setTitle,
-  addQuestion,
-  moveUpQuestion,
-  moveDownQuestion,
-  deleteQuestion,
-  setSurvey,
-} from '../stores/survey/surveySlice';
 import { useDispatch, useSelector } from 'react-redux';
+import BuilderTitleInput from '../components/BuilderTitleInput';
 
 function BuilderPage() {
   const [data, setData] = useState({}); // 로컬 state
-  const survey = useSelector((state) => state.survey.data); // 전역 state, data = survey
+  //const survey = useSelector((state) => state.survey.data); // 전역 state, data = survey, 이 컴포넌트에 이 state가 있는 것은 비효율적임
   const error = useSelector((state) => state.survey.error);
   const loading = useSelector((state) => state.survey.loading);
   const dispatch = useDispatch();
@@ -37,7 +30,7 @@ function BuilderPage() {
     return 'error';
   }
 
-  if (!survey || loading) {
+  if (/*!survey ||*/ loading) {
     return 'loading';
   }
 
@@ -45,42 +38,10 @@ function BuilderPage() {
     <MainLayout selectedKeys={['builder']}>
       <Row>
         <Col flex="auto">
-          <Input
-            placeholder="설문 제목을 입력해 주세요."
-            value={survey.title}
-            /*
-            onChange={(e) => {
-              setData((state) => ({ ...state, title: e.target.value }));
-            }}
-            */
-            // immer.js 사용1
-            /*
-            onChange={(e) => {
-              const newData = produce(data, (draft) => {
-                draft.title = e.target.value;
-              })
-            setData(newData);
-            }}
-            */
-            // immer.js 를 더 간단히. react와 조합하면 data를 굳이 선언할 필요 x
-            /*
-            onChange={(e) => {
-              setData(
-                produce(data, (draft) => {
-                  draft.title = e.target.value;
-                }),
-              );
-            }}
-            */
-            // 위는 로컬 state를 변경하는 코드, 아래는 전역 state를 변경하는 코드
-            onChange={(e) => {
-              dispatch(setTitle(e.target.value));
-            }}
-          />
+          <BuilderTitleInput />
           <PreviewSection
-            questions={survey.questions}
+          /*questions={survey.questions}
             addQuestion={(type) => {
-              /*
               setData((state) => ({
                 ...state,
                 questions: [
@@ -97,8 +58,6 @@ function BuilderPage() {
                   },
                 ],
               }));
-              */
-              /*
              setData(
                 produce((draft) => {
                   draft.questions.push({
@@ -113,7 +72,6 @@ function BuilderPage() {
                   });
                 }),
               );
-              */
               // 위는 로컬 state를 변경하는 코드, 아래는 전역 state를 변경하는 코드
               dispatch(addQuestion(type));
             }}
@@ -130,7 +88,6 @@ function BuilderPage() {
                   draft.questions[index - 1] = temp;
                 }),
               );
-              */
               dispatch(moveUpQuestion(index));
             }}
             deleteQuestion={(index) => {
@@ -142,6 +99,7 @@ function BuilderPage() {
               }
               dispatch(moveDownQuestion(index));
             }}
+              */
           />
         </Col>
         <Col flex="350px">
